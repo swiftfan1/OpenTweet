@@ -84,7 +84,7 @@ extension TimelineViewController: UICollectionViewDelegate {
 }
 
 private struct Constants {
-    static let smallCellHeight: CGFloat = 100
+    static let smallCellHeight: CGFloat = 240
     static let cellWidth: CGFloat = UIScreen.main.bounds.width
     static let cellIdentifier = "cellId"
 }

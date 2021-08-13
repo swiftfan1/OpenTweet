@@ -14,6 +14,13 @@ class TimelineCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 5
+        label.sizeToFit()
+        return label
+    }()
+    
+    let authorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -21,6 +28,7 @@ class TimelineCell: UICollectionViewCell {
         didSet {
             if let tweet = tweet {
                 contentLabel.text = tweet.content
+                authorLabel.text = tweet.author
             }
         }
     }
@@ -34,13 +42,19 @@ class TimelineCell: UICollectionViewCell {
     
     private func addSubviews() {
         addSubview(contentLabel)
+        addSubview(authorLabel)
     }
     
     private func configureConstraints() {
         NSLayoutConstraint.activate([
-            contentLabel.centerXAnchor.constraint(equalTo:safeAreaLayoutGuide.centerXAnchor),
-            contentLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            contentLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, constant: -16)
+            authorLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            authorLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            authorLabel.heightAnchor.constraint(equalToConstant: 30),
+            contentLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor),
+            //contentLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+            contentLabel.leadingAnchor.constraint(equalTo: authorLabel.leadingAnchor),
+            contentLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, constant: -32),
+            contentLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
     
