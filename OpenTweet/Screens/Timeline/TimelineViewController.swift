@@ -38,11 +38,13 @@ class TimelineViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 1
         layout.minimumInteritemSpacing = 1
-        layout.itemSize = CGSize(width: Constants.cellWidth, height: Constants.smallCellHeight)
+        layout.estimatedItemSize = CGSize(width: Constants.cellWidth, height: Constants.smallCellHeight)
+        //layout.itemSize = CGSize(width: Constants.cellWidth, height: Constants.smallCellHeight)
         return UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
     }()
     
     private func setupUI() {
+        view.backgroundColor = .primaryBackground
         navigationController?.navigationBar.topItem?.title = "Timeline"
     }
     
@@ -93,7 +95,7 @@ extension TimelineViewController: UICollectionViewDelegate {
 }
 
 private struct Constants {
-    static let smallCellHeight: CGFloat = 240
+    static let smallCellHeight: CGFloat = 100
     static let cellWidth: CGFloat = UIScreen.main.bounds.width
     static let cellIdentifier = "cellId"
 }

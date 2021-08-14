@@ -13,7 +13,7 @@ class TimelineCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.lineBreakMode = .byWordWrapping
-        label.numberOfLines = 5
+        label.numberOfLines = 10
         label.sizeToFit()
         return label
     }()
@@ -21,7 +21,23 @@ class TimelineCell: UICollectionViewCell {
     let authorLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.secondaryText
         return label
+    }()
+    
+    let dateLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.secondaryText
+        return label
+    }()
+    
+    let cellContent: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     var tweet: Tweet? {
@@ -29,6 +45,7 @@ class TimelineCell: UICollectionViewCell {
             if let tweet = tweet {
                 contentLabel.text = tweet.content
                 authorLabel.text = tweet.author
+                dateLabel.text = tweet.date.timelineDisplayDate()
             }
         }
     }
@@ -41,20 +58,28 @@ class TimelineCell: UICollectionViewCell {
     }
     
     private func addSubviews() {
-        addSubview(contentLabel)
-        addSubview(authorLabel)
+        addSubview(cellContent)
+        cellContent.addSubview(contentLabel)
+        cellContent.addSubview(authorLabel)
+        cellContent.addSubview(dateLabel)
     }
     
     private func configureConstraints() {
         NSLayoutConstraint.activate([
-            authorLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
-            authorLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            cellContent.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            cellContent.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            cellContent.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
+            cellContent.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            authorLabel.topAnchor.constraint(equalTo: cellContent.topAnchor, constant: 16),
+            authorLabel.leadingAnchor.constraint(equalTo: cellContent.leadingAnchor, constant: 16),
             authorLabel.heightAnchor.constraint(equalToConstant: 30),
+            dateLabel.topAnchor.constraint(equalTo: authorLabel.topAnchor),
+            dateLabel.bottomAnchor.constraint(equalTo: authorLabel.bottomAnchor),
+            dateLabel.trailingAnchor.constraint(equalTo: cellContent.trailingAnchor, constant: -16),
             contentLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor),
-            //contentLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
             contentLabel.leadingAnchor.constraint(equalTo: authorLabel.leadingAnchor),
-            contentLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, constant: -32),
-            contentLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -16)
+            contentLabel.trailingAnchor.constraint(equalTo: cellContent.trailingAnchor, constant: -16),
+            contentLabel.bottomAnchor.constraint(equalTo: cellContent.bottomAnchor, constant: -16)
         ])
     }
     
