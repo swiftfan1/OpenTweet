@@ -35,7 +35,7 @@ class TimelineCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .lightGray
+        backgroundColor = .primaryBackground
         addSubviews()
         configureConstraints()
     }

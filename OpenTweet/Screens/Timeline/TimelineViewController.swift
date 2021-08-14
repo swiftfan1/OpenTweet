@@ -9,38 +9,46 @@
 import UIKit
 
 class TimelineViewController: UIViewController {
-
-	override func viewDidLoad() {
-		super.viewDidLoad()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        buildCollectionView()
+        setupUI()
+        // split this to another view function or something
+        // TODO show a loading spinner while this loads
         TweetDataManager.shared.fetchTimeline { result in
-            switch result {
-            case .success(let timeline):
-                self.tweets = timeline.timeline
-                self.collectionView.reloadData()
-                for tweet in timeline.timeline {
-                    print(tweet)
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let timeline):
+                    self.tweets = timeline.timeline
+                    self.collectionView.reloadData()
+                case .failure(_):
+                    print("todo show an empty state showing that tweets failed to load")
+                // consider if build collection view should only happen in the success case
+                // or if my collection should track empty state and display accordingly
                 }
-            case .failure(_):
-                print("todo show an empty state showing that tweets failed to load")
             }
         }
-        buildCollectionView()
-	}
+    }
     
     private var tweets: [Tweet] = []
     
     // todo consider if this should be split out to custom view
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-//        layout.minimumLineSpacing = 0
-//        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 1
+        layout.minimumInteritemSpacing = 1
         layout.itemSize = CGSize(width: Constants.cellWidth, height: Constants.smallCellHeight)
         return UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
     }()
     
+    private func setupUI() {
+        navigationController?.navigationBar.topItem?.title = "Timeline"
+    }
+    
     private func buildCollectionView() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .secondaryBackground
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(TimelineCell.self, forCellWithReuseIdentifier: Constants.cellIdentifier)
@@ -54,12 +62,12 @@ class TimelineViewController: UIViewController {
     }
 }
 
-// MARK: UiCollectionViewDataSource
+// MARK: UICollectionViewDataSource
 
 extension TimelineViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
+    //    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    //        return 1
+    //    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print(tweets.count)
@@ -80,6 +88,7 @@ extension TimelineViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("todo show the tweet thread")
         print(tweets[indexPath.item].content)
+        navigationController?.pushViewController(TweetThreadViewController(), animated: true)
     }
 }
 
