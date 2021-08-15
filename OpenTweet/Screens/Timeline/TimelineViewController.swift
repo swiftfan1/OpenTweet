@@ -21,6 +21,7 @@ class TimelineViewController: UIViewController {
                 switch result {
                 case .success(let timeline):
                     self.tweets = timeline.timeline
+                    print(TweetDataManager.shared.replyMap)
                     self.collectionView.reloadData()
                 case .failure(_):
                     print("todo show an empty state showing that tweets failed to load")

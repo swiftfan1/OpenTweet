@@ -11,6 +11,7 @@ import Foundation
 final class TweetDataManager {
     static let shared = TweetDataManager()
     let dataQueue = DispatchQueue(label: QueueLabel.data)
+    var replyMap: [String: [String]] = [:]
     
     private init() {}
     
@@ -22,6 +23,16 @@ final class TweetDataManager {
                     if let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8) {
                         do {
                             let decodedData = try JSONDecoder().decode(Timeline.self, from: jsonData)
+                            for tweet in decodedData.timeline {
+                                if let reply = tweet.inReplyTo {
+                                    if var replies = self.replyMap[reply] {
+                                        replies.append(tweet.id)
+                                        self.replyMap[reply] = replies
+                                    } else {
+                                        self.replyMap[reply] = [tweet.id]
+                                    }
+                                }
+                            }
                             completed(.success(decodedData))
                         } catch {
                             completed(.failure(error))
