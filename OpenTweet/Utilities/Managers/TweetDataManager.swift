@@ -11,7 +11,8 @@ import Foundation
 final class TweetDataManager {
     static let shared = TweetDataManager()
     let dataQueue = DispatchQueue(label: QueueLabel.data)
-    var replyMap: [String: [String]] = [:]
+    var replyMap: [String: [Tweet]] = [:]
+    var allTweets: [String: Tweet] = [:]
     
     private init() {}
     
@@ -23,13 +24,17 @@ final class TweetDataManager {
                     if let jsonData = try String(contentsOfFile: bundlePath).data(using: .utf8) {
                         do {
                             let decodedData = try JSONDecoder().decode(Timeline.self, from: jsonData)
+                            self.allTweets = decodedData.timeline.reduce(into: [String: Tweet]()) {
+                                $0[$1.id] = $1
+                            }
+                            print(self.allTweets)
                             for tweet in decodedData.timeline {
                                 if let reply = tweet.inReplyTo {
                                     if var replies = self.replyMap[reply] {
-                                        replies.append(tweet.id)
+                                        replies.append(tweet)
                                         self.replyMap[reply] = replies
                                     } else {
-                                        self.replyMap[reply] = [tweet.id]
+                                        self.replyMap[reply] = [tweet]
                                     }
                                 }
                             }

@@ -91,7 +91,17 @@ extension TimelineViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("todo show the tweet thread")
         print(tweets[indexPath.item].content)
-        navigationController?.pushViewController(TweetThreadViewController(), animated: true)
+        let selectedTweet = tweets[indexPath.item]
+        var mainTweet: Tweet
+        var replyTweets: [Tweet]
+        if let replyToId = selectedTweet.inReplyTo, let replyToTweet = TweetDataManager.shared.allTweets[replyToId] {
+            mainTweet = replyToTweet
+            replyTweets = [selectedTweet]
+        } else {
+            mainTweet = selectedTweet
+            replyTweets = TweetDataManager.shared.replyMap[selectedTweet.id] ?? []
+        }
+        navigationController?.pushViewController(TweetThreadViewController(mainTweet: mainTweet, replyTweets: replyTweets), animated: true)
     }
 }
 

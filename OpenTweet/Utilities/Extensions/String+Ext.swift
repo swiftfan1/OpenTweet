@@ -10,6 +10,7 @@ import Foundation
 
 extension String {
     func timelineDisplayDate() -> String {
+        // TODO get this formatter out of the function...I'm declaring it every time
         let dateFormatter = ISO8601DateFormatter()
         guard let date = dateFormatter.date(from: self) else {
             return ""
