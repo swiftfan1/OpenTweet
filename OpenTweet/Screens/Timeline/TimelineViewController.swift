@@ -112,14 +112,26 @@ extension TimelineViewController: UICollectionViewDelegate {
         let selectedTweet = tweets[indexPath.item]
         var mainTweet: Tweet
         var replyTweets: [Tweet]
+        var imageDict: [String: UIImage] = [:]
         if let replyToId = selectedTweet.inReplyTo, let replyToTweet = TweetDataManager.shared.allTweets[replyToId] {
             mainTweet = replyToTweet
             replyTweets = [selectedTweet]
+            let allTweets = [mainTweet, selectedTweet]
+            setImageDict(&imageDict, tweets: allTweets)
         } else {
             mainTweet = selectedTweet
             replyTweets = TweetDataManager.shared.replyMap[selectedTweet.id] ?? []
+            var allTweets = [mainTweet]
+            allTweets.append(contentsOf: replyTweets)
+            setImageDict(&imageDict, tweets: allTweets)
         }
-        navigationController?.pushViewController(TweetThreadViewController(mainTweet: mainTweet, replyTweets: replyTweets), animated: true)
+        navigationController?.pushViewController(TweetThreadViewController(mainTweet: mainTweet, replyTweets: replyTweets, imageDict: imageDict), animated: true)
+    }
+}
+
+private func setImageDict(_ dict: inout [String: UIImage], tweets: [Tweet]) {
+    for tweet in tweets {
+        dict[tweet.id] = ImageManager.shared.imageCache.object(forKey: NSString(string: tweet.avatar ?? "")) ?? UIImage(named: "egg")
     }
 }
 
