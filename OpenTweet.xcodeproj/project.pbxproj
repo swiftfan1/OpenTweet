@@ -23,6 +23,8 @@
 		7F97FC7026C821020090B20E /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F97FC6F26C821020090B20E /* UIColor+Ext.swift */; };
 		7F97FC7226C826D70090B20E /* TweetThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F97FC7126C826D70090B20E /* TweetThreadView.swift */; };
 		7FB1FF2326C86C60005AB378 /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB1FF2226C86C60005AB378 /* String+Ext.swift */; };
+		7FCC180626CDE8820097C8AD /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCC180526CDE8820097C8AD /* ImageManager.swift */; };
+		7FCC180926CDF48C0097C8AD /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCC180826CDF48C0097C8AD /* SpinnerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +68,8 @@
 		7F97FC6F26C821020090B20E /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		7F97FC7126C826D70090B20E /* TweetThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetThreadView.swift; sourceTree = "<group>"; };
 		7FB1FF2226C86C60005AB378 /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
+		7FCC180526CDE8820097C8AD /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
+		7FCC180826CDF48C0097C8AD /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,7 @@
 				7F7FFD6C26C6035800901249 /* Utilities */,
 				7F7FFD6B26C6035300901249 /* Model */,
 				7F7FFD7426C60A7800901249 /* Screens */,
+				7FCC180726CDF47A0097C8AD /* Views */,
 				009C4C6B1D9F0CD600F0BC6C /* AppDelegate.swift */,
 				009C4C6F1D9F0CD600F0BC6C /* Main.storyboard */,
 				009C4C741D9F0CD600F0BC6C /* LaunchScreen.storyboard */,
@@ -179,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				7F7FFD6D26C6037B00901249 /* TweetDataManager.swift */,
+				7FCC180526CDE8820097C8AD /* ImageManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -216,6 +222,14 @@
 				7F97FC7126C826D70090B20E /* TweetThreadView.swift */,
 			);
 			path = TweetThread;
+			sourceTree = "<group>";
+		};
+		7FCC180726CDF47A0097C8AD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7FCC180826CDF48C0097C8AD /* SpinnerViewController.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -360,11 +374,13 @@
 				7F7FFD6A26C6034F00901249 /* Tweet.swift in Sources */,
 				7F7FFD7726C60A9000901249 /* TimelineCell.swift in Sources */,
 				009C4C6E1D9F0CD600F0BC6C /* TimelineViewController.swift in Sources */,
+				7FCC180926CDF48C0097C8AD /* SpinnerViewController.swift in Sources */,
 				009C4C6C1D9F0CD600F0BC6C /* AppDelegate.swift in Sources */,
 				7F7FFD7026C6039600901249 /* Timeline.swift in Sources */,
 				7F97FC7026C821020090B20E /* UIColor+Ext.swift in Sources */,
 				7F7FFD6E26C6037B00901249 /* TweetDataManager.swift in Sources */,
 				7F7FFD7326C6050B00901249 /* Constants.swift in Sources */,
+				7FCC180626CDE8820097C8AD /* ImageManager.swift in Sources */,
 				7FB1FF2326C86C60005AB378 /* String+Ext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

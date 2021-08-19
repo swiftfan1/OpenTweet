@@ -34,6 +34,13 @@ class TimelineCell: UICollectionViewCell {
         return label
     }()
     
+    let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "egg")!
+        return imageView
+    }()
+    
     let cellContent: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -62,6 +69,7 @@ class TimelineCell: UICollectionViewCell {
         cellContent.addSubview(contentLabel)
         cellContent.addSubview(authorLabel)
         cellContent.addSubview(dateLabel)
+        cellContent.addSubview(imageView)
     }
     
     private func configureConstraints() {
@@ -70,8 +78,12 @@ class TimelineCell: UICollectionViewCell {
             cellContent.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             cellContent.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
             cellContent.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            imageView.leadingAnchor.constraint(equalTo: cellContent.leadingAnchor, constant: 16),
+            imageView.heightAnchor.constraint(equalToConstant: 60),
+            imageView.widthAnchor.constraint(equalToConstant: 60),
+            imageView.centerYAnchor.constraint(equalTo: cellContent.centerYAnchor),
             authorLabel.topAnchor.constraint(equalTo: cellContent.topAnchor, constant: 16),
-            authorLabel.leadingAnchor.constraint(equalTo: cellContent.leadingAnchor, constant: 16),
+            authorLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
             authorLabel.heightAnchor.constraint(equalToConstant: 30),
             dateLabel.topAnchor.constraint(equalTo: authorLabel.topAnchor),
             dateLabel.bottomAnchor.constraint(equalTo: authorLabel.bottomAnchor),

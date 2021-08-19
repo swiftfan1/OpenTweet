@@ -12,6 +12,7 @@ class TimelineViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        buildSpinnerView()
         buildCollectionView()
         setupUI()
         // split this to another view function or something
@@ -21,7 +22,10 @@ class TimelineViewController: UIViewController {
                 switch result {
                 case .success(let timeline):
                     self.tweets = timeline.timeline
-                    print(TweetDataManager.shared.replyMap)
+                    //print(TweetDataManager.shared.replyMap)
+                    self.spinner.willMove(toParent: nil)
+                    self.spinner.view.removeFromSuperview()
+                    self.spinner.removeFromParent()
                     self.collectionView.reloadData()
                 case .failure(_):
                     print("todo show an empty state showing that tweets failed to load")
@@ -33,6 +37,8 @@ class TimelineViewController: UIViewController {
     }
     
     private var tweets: [Tweet] = []
+    private let spinner = SpinnerViewController()
+
     
     // todo consider if this should be split out to custom view
     private lazy var collectionView: UICollectionView = {
@@ -43,6 +49,13 @@ class TimelineViewController: UIViewController {
         //layout.itemSize = CGSize(width: Constants.cellWidth, height: Constants.smallCellHeight)
         return UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
     }()
+    
+    private func buildSpinnerView() {
+        spinner.view.frame = view.frame
+        addChild(spinner)
+        view.addSubview(spinner.view)
+        spinner.didMove(toParent: self)
+    }
     
     private func setupUI() {
         view.backgroundColor = .primaryBackground
@@ -81,6 +94,11 @@ extension TimelineViewController: UICollectionViewDataSource {
         // todo don't force unwrap
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellIdentifier, for: indexPath) as! TimelineCell
         cell.tweet = tweets[indexPath.item]
+        ImageManager.shared.fetchImage(tweets[indexPath.item].avatar) { image in
+            DispatchQueue.main.async {
+                cell.imageView.image = image
+            }
+        }
         return cell
     }
 }

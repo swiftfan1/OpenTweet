@@ -27,8 +27,8 @@ final class TweetDataManager {
                             self.allTweets = decodedData.timeline.reduce(into: [String: Tweet]()) {
                                 $0[$1.id] = $1
                             }
-                            print(self.allTweets)
                             for tweet in decodedData.timeline {
+                                ImageManager.shared.fetchImage(tweet.avatar, completed: nil)
                                 if let reply = tweet.inReplyTo {
                                     if var replies = self.replyMap[reply] {
                                         replies.append(tweet)
