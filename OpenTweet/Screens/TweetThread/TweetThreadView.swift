@@ -17,7 +17,7 @@ class TweetThreadViewController: UIViewController {
         print(mainTweet)
         print(replyTweets)
         buildMainTweetView()
-        buildReplyTweetsCollectionview()
+        buildReplyTweetsTableView()
     }
     
     init(mainTweet: Tweet, replyTweets: [Tweet], imageDict: [String: UIImage]) {
@@ -39,95 +39,60 @@ class TweetThreadViewController: UIViewController {
         // TODO split this out to seperate view file
         mainTweetView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mainTweetView)
-        let contentLabel = UILabel()
-        contentLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentLabel.text = mainTweet.content
-        contentLabel.numberOfLines = 5
-        let authorLabel = UILabel()
-        authorLabel.translatesAutoresizingMaskIntoConstraints = false
-        authorLabel.text = mainTweet.author
-        let dateLabel = UILabel()
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        dateLabel.text = mainTweet.date
-        let avatarImage = UIImageView()
-        avatarImage.translatesAutoresizingMaskIntoConstraints = false
-        avatarImage.image = imageDict[mainTweet.id] ?? UIImage(named: "egg")
-        avatarImage.layer.cornerRadius = 40
-        avatarImage.clipsToBounds = true
-        mainTweetView.addSubview(authorLabel)
-        mainTweetView.addSubview(contentLabel)
-        mainTweetView.addSubview(dateLabel)
-        mainTweetView.addSubview(avatarImage)
         NSLayoutConstraint.activate([
-            mainTweetView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
+            mainTweetView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.4),
             mainTweetView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             mainTweetView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainTweetView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            avatarImage.centerYAnchor.constraint(equalTo: mainTweetView.centerYAnchor),
-            avatarImage.widthAnchor.constraint(equalToConstant: 80),
-            avatarImage.heightAnchor.constraint(equalToConstant: 80),
-            avatarImage.leadingAnchor.constraint(equalTo: mainTweetView.leadingAnchor),
-            authorLabel.topAnchor.constraint(equalTo: mainTweetView.topAnchor),
-            authorLabel.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor),
-            authorLabel.trailingAnchor.constraint(equalTo: mainTweetView.trailingAnchor),
-            authorLabel.heightAnchor.constraint(equalToConstant: 60),
-            contentLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor),
-            contentLabel.leadingAnchor.constraint(equalTo: authorLabel.leadingAnchor),
-            contentLabel.trailingAnchor.constraint(equalTo: authorLabel.trailingAnchor),
-            contentLabel.heightAnchor.constraint(equalToConstant: 200),
-            dateLabel.leadingAnchor.constraint(equalTo: authorLabel.leadingAnchor),
-            dateLabel.bottomAnchor.constraint(equalTo: mainTweetView.bottomAnchor),
-            dateLabel.heightAnchor.constraint(equalToConstant: 60)
+
         ])
     }
     
-    private func buildReplyTweetsCollectionview() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .secondaryBackground
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(TimelineCell.self, forCellWithReuseIdentifier: Constants.cellIdentifier)
-        view.addSubview(collectionView)
+    private func buildReplyTweetsTableView() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .primaryBackground
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(TimelineCell.self, forCellReuseIdentifier: Constants.cellIdentifier)
+        view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: mainTweetView.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            tableView.topAnchor.constraint(equalTo: mainTweetView.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
     
-    private var mainTweetView = UIView()
+    private lazy var mainTweetView: MainTweetView = {
+        return MainTweetView(tweet: mainTweet)
+    }()
     
-    private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 1
-        layout.minimumInteritemSpacing = 1
-        layout.estimatedItemSize = CGSize(width: Constants.cellWidth, height: Constants.smallCellHeight)
-        //layout.itemSize = CGSize(width: Constants.cellWidth, height: Constants.smallCellHeight)
-        return UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+    private lazy var tableView: UITableView = {
+        return UITableView()
     }()
 }
 
 
-extension TweetThreadViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension TweetThreadViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Replies"
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return replyTweets.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // TODO remove force unwrap
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellIdentifier, for: indexPath) as! TimelineCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! TimelineCell
         let tweet = replyTweets[indexPath.item]
         cell.tweet = tweet
-        cell.imageView.image = imageDict[tweet.id] ?? UIImage(named: "egg")
+        cell.avatarView.image = imageDict[tweet.id] ?? UIImage(named: "egg")
         return cell
     }
-    
-    
 }
 
-extension TweetThreadViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+extension TweetThreadViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected tweet")
     }
 }

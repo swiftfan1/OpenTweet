@@ -13,7 +13,7 @@ class TimelineViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         buildSpinnerView()
-        buildCollectionView()
+        buildTableView()
         setupUI()
         // split this to another view function or something
         // TODO show a loading spinner while this loads
@@ -26,7 +26,7 @@ class TimelineViewController: UIViewController {
                     self.spinner.willMove(toParent: nil)
                     self.spinner.view.removeFromSuperview()
                     self.spinner.removeFromParent()
-                    self.collectionView.reloadData()
+                    self.tableView.reloadData()
                 case .failure(_):
                     print("todo show an empty state showing that tweets failed to load")
                 // consider if build collection view should only happen in the success case
@@ -40,15 +40,7 @@ class TimelineViewController: UIViewController {
     private let spinner = SpinnerViewController()
 
     
-    // todo consider if this should be split out to custom view
-    private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 1
-        layout.minimumInteritemSpacing = 1
-        layout.estimatedItemSize = CGSize(width: Constants.cellWidth, height: Constants.smallCellHeight)
-        //layout.itemSize = CGSize(width: Constants.cellWidth, height: Constants.smallCellHeight)
-        return UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-    }()
+    private var tableView = UITableView()
     
     private func buildSpinnerView() {
         spinner.view.frame = view.frame
@@ -62,53 +54,46 @@ class TimelineViewController: UIViewController {
         navigationController?.navigationBar.topItem?.title = "Timeline"
     }
     
-    private func buildCollectionView() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .secondaryBackground
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(TimelineCell.self, forCellWithReuseIdentifier: Constants.cellIdentifier)
-        view.addSubview(collectionView)
+    private func buildTableView() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(TimelineCell.self, forCellReuseIdentifier: Constants.cellIdentifier)
+        view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
 }
 
-// MARK: UICollectionViewDataSource
+// MARK: UITableViewDataSource
 
-extension TimelineViewController: UICollectionViewDataSource {
-    //    func numberOfSections(in collectionView: UICollectionView) -> Int {
-    //        return 1
-    //    }
+extension TimelineViewController: UITableViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(tweets.count)
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tweets.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // todo don't force unwrap
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellIdentifier, for: indexPath) as! TimelineCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! TimelineCell
         cell.tweet = tweets[indexPath.item]
         ImageManager.shared.fetchImage(tweets[indexPath.item].avatar) { image in
             DispatchQueue.main.async {
-                cell.imageView.image = image
+                cell.avatarView.image = image
             }
         }
         return cell
     }
 }
 
-// MARK: UICollectionViewDelegate
+// MARK: UITableViewDelegate
 
-extension TimelineViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("todo show the tweet thread")
-        print(tweets[indexPath.item].content)
+extension TimelineViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedTweet = tweets[indexPath.item]
         var mainTweet: Tweet
         var replyTweets: [Tweet]

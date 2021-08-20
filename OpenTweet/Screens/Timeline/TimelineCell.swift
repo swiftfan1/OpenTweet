@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TimelineCell: UICollectionViewCell {
+class TimelineCell: UITableViewCell {
     let contentLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -34,10 +34,12 @@ class TimelineCell: UICollectionViewCell {
         return label
     }()
     
-    let imageView: UIImageView = {
+    let avatarView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "egg")!
+        imageView.layer.cornerRadius = 30
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -57,19 +59,18 @@ class TimelineCell: UICollectionViewCell {
         }
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .primaryBackground
         addSubviews()
         configureConstraints()
     }
-    
     private func addSubviews() {
         addSubview(cellContent)
         cellContent.addSubview(contentLabel)
         cellContent.addSubview(authorLabel)
         cellContent.addSubview(dateLabel)
-        cellContent.addSubview(imageView)
+        cellContent.addSubview(avatarView)
     }
     
     private func configureConstraints() {
@@ -78,12 +79,12 @@ class TimelineCell: UICollectionViewCell {
             cellContent.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             cellContent.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
             cellContent.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            imageView.leadingAnchor.constraint(equalTo: cellContent.leadingAnchor, constant: 16),
-            imageView.heightAnchor.constraint(equalToConstant: 60),
-            imageView.widthAnchor.constraint(equalToConstant: 60),
-            imageView.centerYAnchor.constraint(equalTo: cellContent.centerYAnchor),
+            avatarView.leadingAnchor.constraint(equalTo: cellContent.leadingAnchor, constant: 16),
+            avatarView.heightAnchor.constraint(equalToConstant: 60),
+            avatarView.widthAnchor.constraint(equalToConstant: 60),
+            avatarView.centerYAnchor.constraint(equalTo: cellContent.centerYAnchor),
             authorLabel.topAnchor.constraint(equalTo: cellContent.topAnchor, constant: 16),
-            authorLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+            authorLabel.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: 16),
             authorLabel.heightAnchor.constraint(equalToConstant: 30),
             dateLabel.topAnchor.constraint(equalTo: authorLabel.topAnchor),
             dateLabel.bottomAnchor.constraint(equalTo: authorLabel.bottomAnchor),
