@@ -48,13 +48,13 @@ class TimelineCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+        
     var tweet: Tweet? {
         didSet {
             if let tweet = tweet {
-                contentLabel.text = tweet.content
+                contentLabel.attributedText = tweet.content.attributedDisplay()
                 authorLabel.text = tweet.author
-                dateLabel.text = tweet.date.timelineDisplayDate()
+                dateLabel.text = tweet.date.displayDate(format: "M/d/yy")
             }
         }
     }
